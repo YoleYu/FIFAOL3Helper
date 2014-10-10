@@ -17,13 +17,27 @@ FIFAOL3Helper
 ## 使用
   1.  下载并安装 [按键精灵2014](http://www.anjian.com/downloading2014.html)
   2.  打开按键精灵，点击“新建脚本”，选择“空白脚本”，并点击确定。
-  3.  点击右边的源文件，并且将script中全部内容复制到按键精灵编辑器里。
+      ![Alt text](https://raw.githubusercontent.com/YoleYu/FIFAOL3Helper/3227599ba5aa65ddf55e7c84bc8018c44cf7eed0/1.jpg)   
+      
+  3.  点击右边的源文件，并且将script文件中全部内容复制到按键精灵编辑器里。
+      ![Alt text](https://raw.githubusercontent.com/YoleYu/FIFAOL3Helper/3227599ba5aa65ddf55e7c84bc8018c44cf7eed0/2.jpg)    
+      
+      ![Alt text](https://raw.githubusercontent.com/YoleYu/FIFAOL3Helper/3227599ba5aa65ddf55e7c84bc8018c44cf7eed0/3.jpg)
+
   4.  创建一个txt文件，用了存你的账号密码信息。
       -   必须每一行一个账
-      -   账号格式必须是 QQ号|密码|注释      
-     例如：123456|mima123_|这里可以不写东西   
+      -   账号格式必须是 QQ号/密码/大区/注释      
+      -   大区编号 1=华东，2=华南，3=西南，4=华北网通
+     例如：123456/mima123_/1/这里可以不写东西   
       -   密码只支持数字字母和_, 暂时不支持其他特殊字符     
   5.  更改脚本代码中必要的信息
       -   第三行fifaClient，将括号中的路径改为你游戏客户端的路径
       -   第四行sound，将括号中的路径改为本地任意一个能访问的音乐文件的路径，当脚本所有任务结束后，将播放该音乐。
-  5.  按F10启动脚本。
+  6.  按F10启动脚本。
+
+## 注意事项
+ 1.  本脚本不提供任何后台后台操作功能    
+      这意味着脚本运行时不能有其他窗口遮挡游戏界面
+      如果需要后台运行，请自行修改代码。TX能检测到后台运行。
+      
+    

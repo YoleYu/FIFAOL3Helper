@@ -31,7 +31,7 @@ Function startFifaHelper()
 		Call startApp()
 		Delay 2000 //
 		
-		Call login(info(0), info(1))
+		Call login(info(0), info(1), info(2))
 		
 		Call launch(titleId)
 		Hwnd = Plugin.Window.Find(0, "FIFA" & titleId)
@@ -69,7 +69,7 @@ Function startApp()
 	TracePrint "window position OK!"
 End Function
 
-Function login(name, pwd)
+Function login(name, pwd, region)
 	MoveTo 1107+baseX, 386+baseY // account name text box
 	Delay 500
 	LeftClick 1
@@ -83,14 +83,22 @@ Function login(name, pwd)
 	Delay 1000
 	Call typePwd(pwd)
 	Delay 500
+	Call Plugin.Window.Active(Hwnd)
 	KeyPress "Enter", 1
+	Delay 5000
 	
-	Delay 3000
-	MoveTo 1004+baseX, 659+baseY // using default Zone
-	Delay 2000
-	LeftClick 1
+	Call chooseRegion(region)
+End Function
+
+Function chooseRegion(region)
+	For (region - 1)
+		Call Plugin.Window.Active(Hwnd)
+		KeyPress "Right", 1
+		Delay 1500
+	Next
 	
-	//Delay 35 * 1000 // no delay
+	Call Plugin.Window.Active(Hwnd)
+	KeyPress "Enter", 1
 End Function
 
 Function launch(titleId)
@@ -123,7 +131,7 @@ Function launch(titleId)
 	Call log("clicked X of ad")
 	Delay 3000
 	MoveTo baseX+571, baseY+482 // enter game
-	LeftClick 1     // ? button
+	LeftClick 1     // △ button
 	Delay 15*1000  //a little long
 	
 	MoveTo baseX+325, baseY+430  // every day task button
@@ -206,10 +214,10 @@ Function runAutoMgr(Hwnd)
 //	Delay 500
 //	LeftClick 1
 //	Delay 1000
-	Call clickNext()// ????
+	Call clickNext()// 阵容界面
 	Call log("clicked nexted 2")
 	Delay 5000
-	Call clickNext()// ?????
+	Call clickNext()// 选择球衣界面
 	Call log("clicked nexted 3")
 	Delay 10 * 1000
 	Call Plugin.Window.Active(Hwnd)
