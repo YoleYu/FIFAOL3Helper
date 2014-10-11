@@ -14,6 +14,9 @@ FIFAOL3Helper
   -  支持自动续约
   -  支持对以上动作的多开（游戏本身能几开就支持几个instance）
 
+## 注意事项
+  -  请点击 [这里](http://blog.yole.me/fifaol3helper%E4%BD%BF%E7%94%A8%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/)
+
 ## 使用
   1.  下载并安装 [按键精灵2014](http://www.anjian.com/downloading2014.html)
   2.  打开按键精灵，点击“新建脚本”，选择“空白脚本”，并点击确定。
