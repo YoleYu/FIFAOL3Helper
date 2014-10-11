@@ -81,7 +81,8 @@ Function login(name, pwd, region)
 	Delay 1000
 	KeyPress "Tab", 1  // password text box
 	Delay 1000
-	Call typePwd(pwd)
+	Call lib.键盘.KeyList(pwd,0,50)
+	//Call typePwd(pwd)
 	Delay 500
 	Call Plugin.Window.Active(Hwnd)
 	KeyPress "Enter", 1
@@ -91,6 +92,11 @@ Function login(name, pwd, region)
 End Function
 
 Function chooseRegion(region)
+	For 4
+		KeyPress "Left", 1
+		Delay 800
+	Next
+
 	For (region - 1)
 		Call Plugin.Window.Active(Hwnd)
 		KeyPress "Right", 1
@@ -336,34 +342,6 @@ Function clickRenew()
 		
 	//End If
 	Call log("exit click renew")
-End Function
-
-
-Function typePwd(str)
-	Dim char, strasc
-        strasc=""
-	For i = 1 To len(str)
-		char = mid(str, i, 1)
-		// ABC -> abc
-		If asc(char) > 96 and asc(char) < 123 Then 
-           char = chr(asc(char) - 32)           
-           KeyPress Asc(char), 1
-        // special char, need to add more
-       	ElseIf asc(char) = 95 Then
-       		KeyDown "Shift", 1
-            KeyPress "-", 1
-            KeyUp "Shift", 1
-       	Else                               
-            //KeyDown "Shift", 1
-            KeyPress Asc(char), 1
-            //KeyUp "Shift", 1
-        End If
-		
-		strasc=strasc & char & "=" & Asc(char) & vbCrLf
-		Delay 500
-	Next
-
-	//MsgBox strasc
 End Function
 
 Function exitGame(Hwnd)
