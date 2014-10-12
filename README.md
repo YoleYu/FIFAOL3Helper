@@ -9,22 +9,24 @@ FIFAOL3Helper
   -  根据提供账号自动登陆，账号密码存在本地任意文件夹，安全使用。
   -  支持多账号循环登陆
   -  支持经理人自动比赛
+  -  支持经理人排位自动比赛
   -  自动跳过经理人的过场动画
   -  支持自动换人
   -  支持自动续约
   -  支持对以上动作的多开（游戏本身能几开就支持几个instance）
 
 ## 注意事项
-  -  请点击 [这里](http://blog.yole.me/fifaol3helper%E4%BD%BF%E7%94%A8%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/)
+  -  运行遇到问题，请点击 [这里](http://blog.yole.me/fifaol3helper%E4%BD%BF%E7%94%A8%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/)
+  -  去贴吧看看是否有和你一样的问题。
 
 ## 使用
   1.  下载并安装 [按键精灵2014](http://www.anjian.com/downloading2014.html)
   2.  打开按键精灵，点击“新建脚本”，选择“空白脚本”，并点击确定。
       ![Alt text](https://raw.githubusercontent.com/YoleYu/FIFAOL3Helper/3227599ba5aa65ddf55e7c84bc8018c44cf7eed0/1.jpg)   
+
+      ![Alt text](https://raw.githubusercontent.com/YoleYu/FIFAOL3Helper/3227599ba5aa65ddf55e7c84bc8018c44cf7eed0/2.jpg)  
       
-  3.  点击右边的源文件，并且将script文件中全部内容复制到按键精灵编辑器里。
-      ![Alt text](https://raw.githubusercontent.com/YoleYu/FIFAOL3Helper/3227599ba5aa65ddf55e7c84bc8018c44cf7eed0/2.jpg)    
-      
+  3.  点击右边的源文件，并且将[script文件](https://github.com/YoleYu/FIFAOL3Helper/blob/master/script.Q)中全部内容复制到按键精灵编辑器里。  
       ![Alt text](https://raw.githubusercontent.com/YoleYu/FIFAOL3Helper/3227599ba5aa65ddf55e7c84bc8018c44cf7eed0/3.jpg)
 
   4.  创建一个txt文件，用了存你的账号密码信息。
@@ -35,8 +37,12 @@ FIFAOL3Helper
       -   密码中某些特殊字符可能不支持，请尽量使用字母数字的组合
   5.  更改脚本代码中必要的信息
       -   第三行fifaClient，将括号中的路径改为你游戏客户端的路径
-      -   第四行sound，将括号中的路径改为本地任意一个能访问的音乐文件的路径，当脚本所有任务结束后，将播放该音乐。
+      -   第四行sound，将括号中的路径改为本地任意一个能访问的音乐文件的路径，当脚本所有任务结束后，将播放该音乐。   
       -   第五行text, 替换为你在第3步，创建的账号文件的路径。
+      -   第9，10行，经理人循环次数，是否需要自动换人
+      -   第16行mode，脚本运行模式。   
+
+      下面的图片没更新
       ![Alt text](https://raw.githubusercontent.com/YoleYu/FIFAOL3Helper/images/configSample.jpg)
   6.  按F10启动脚本。
 
