@@ -1,4 +1,4 @@
-Dim account, password, fifaClient,title,titleId,accounts, text, baseX,baseY,logLocation,imgLocation
+Dim account, password, fifaClient,title,titleId,accounts, text, baseX,baseY,isDebug,debugFolder,logLocation,imgLocation
 // change value accordingly
 fifaClient = "F:\Program Files\腾讯游戏\FIFA Online 3\TCLS\Client.exe"
 sound = "F:\Program Files (x86)\腾讯游戏\QQ炫舞\Resources\media\audio\action\action_ui_youlechang.wav"
@@ -7,20 +7,24 @@ text = Plugin.File.ReadFileEx("C:\yole\qqaccount.txt")
 //配置信息
 Dim mgrCycleTimes,mode, autoSelectPlayer
 mgrCycleTimes = 50// 循环多少次经理人
-autoSelectPlayer = False //经理人是否自动选球员，自动选要改成True
+autoSelectPlayer = True //经理人是否自动选球员，自动选要改成True
 
 // 1 ----- 手动登陆到经理人界面并且选好联赛和队伍，不用准备，自动刷经理人
-// 2 ----- 循环登陆text文件中的每个账号，不打比赛。适用于9:00到9:30的活动
+// 2 ----- 循环登陆text文件中的每个账号，不打比赛。适用于9:00到9:30的活动。
+//         由于TX统计问题，我会在登陆后，等待30s再关闭游戏，不想等待这么长的可以自己改小点。
 // 3 ----- 自动登陆，自动打经理人
 // 4 ----- 手动登陆，自动经理人排位。登陆并且到练习场界面，然后F10
-mode=3
+mode=4
 
 // 多开需要调这两个变量
 baseX = 0
 baseY = 0
 
-logLocation = "C:\yole\fifa.log" // optional, only used for debug
-imgLocation = "C:\yole\imgs\" // optional, only used for debug
+isDebug = False
+
+debugFolder = "C:\yole\debug\" // optional, only used for debug
+logLocation = debugFolder & "fifa.log" // optional, only used for debug
+imgLocation = debugFolder & "imgs\" // optional, only used for debug
 title = "FIFA Online 3登录程序"
 accounts = Split(text, "|")
 
@@ -28,6 +32,12 @@ Randomize
 titleId = Int((1000 - 1 + 1) * Rnd + 1)
 
 //Delay  13*60*60*1000
+
+If isDebug = True Then 
+	Call Plugin.File.DeleteFolder(debugFolder)
+	Call Plugin.File.CreateFolder(debugFolder)
+	Call Plugin.File.CreateFolder(imgLocation)
+End If
 
 If mode = 1 Then 
 	For mgrCycleTimes
@@ -95,8 +105,6 @@ Function startApp()
 			Exit Do
 		End If
 	Loop
-	
-	TracePrint "window position OK!"
 End Function
 
 Function login(name, pwd, region)
@@ -108,17 +116,20 @@ Function login(name, pwd, region)
 	Delay 500
 	Call log("start login with:" & name)
 	SayString name
-	Delay 1000
+	Delay 1500
 	KeyPress "Tab", 1  // password text box
-	Delay 1000
+	Delay 1800
 	Call lib.键盘.KeyList(pwd,0,50)
-	//Call typePwd(pwd)
-	Delay 500
+	Delay 1500
 	Call Plugin.Window.Active(Hwnd)
 	KeyPress "Enter", 1
 	Delay 5000
 	
 	Call chooseRegion(region)
+End Function
+
+Function login2(name, pwd, region)
+
 End Function
 
 Function chooseRegion(region)
@@ -145,7 +156,6 @@ Function launch(titleId)
 	Wend
 	Delay 3000
 	Call Plugin.Window.Move(Hwnd, baseX, baseY)
-	Call log("window moved to 0,0")
 
 	// wait for parepare screen	
 	Do
@@ -153,18 +163,18 @@ Function launch(titleId)
 		//FindColor baseX + 266, baseY + 436, baseX + 391, baseY + 484, "F6F5F5", intX, intY
 		FindColor baseX+30,baseY+285,baseX+100,baseY+415,"FFFFFF",intX,intY
 		If intX > 0 And intY > 0 Then 
+			Call log("going to click on Anybutton screen")
 			Exit Do
 		End If
 	Loop
 	Delay 12 * 1000 
 	
 	MoveTo baseX+483, baseY+90 // move to a point in screen
-	LeftClick 2
-	Call log("move and clicked")
+	LeftClick 1
 	Delay 2000
-	MoveTo baseX+483, baseY+90 // move to X of Ad
+	MoveTo baseX + 483, baseY + 90// move to X of Ad
+	Call log("going to click X of ad")
 	LeftClick 1// close X
-	Call log("clicked X of ad")
 	Delay 3000
 	MoveTo baseX+571, baseY+482 // enter game
 	LeftClick 1     // △ button
@@ -175,10 +185,6 @@ Function launch(titleId)
 	Delay 3000 // need wait
 
 	Call Plugin.Window.SetText(Hwnd, "FIFA" & titleId)// change title	
-	//Call Plugin.File.CreateFolder("D:temp")
-	//Delay 2 * 60 * 1000
-	//TracePrint "finished:" & account(i)
-
 End Function
 
 Function enterMgrFromMainPage(Hwnd)
@@ -189,6 +195,7 @@ Function enterMgrFromMainPage(Hwnd)
 	Delay 5000  //shold long !!!!!!!!!
 	MoveTo baseX+557, baseY+399// choose mgr mod
 	Delay 500
+	Call log("going to choose mgr mod")
 	LeftClick 1
 	Delay 6000	
 	
@@ -199,26 +206,16 @@ Function enterMgrFromMainPage(Hwnd)
 	Delay 500
 	LeftClick 1
 	Delay 1500
-	Call log("choosed vs computer")
 
 	MoveTo baseX+534, baseY+209 // click leauge
 	Delay 500
 	LeftClick 1
 	Delay 1500
-	MoveTo baseX+550, baseY+270// choose Ireland
-	Delay 500
-	MouseWheel -10 // scrool down
-	Delay 500
-	MouseWheel - 10 
-	Delay 500
-	MouseWheel - 10 
-	Delay 500
-	MouseWheel - 10 
-	Delay 500
-	MouseWheel - 10 
-	Delay 500
-	MouseWheel -10 
-	Delay 1500
+	MoveTo baseX + 550, baseY + 270// choose Ireland
+	For 10
+		Delay 500
+		MouseWheel -10 // scrool down
+	Next
 	LeftClick 1 // choose IreIand
 	Delay 1500
 	
@@ -251,7 +248,6 @@ Function runAutoMgr(Hwnd)
 	Dim startTime
 	startTime = Plugin.Sys.GetTime()
 	Call clickNext()
-	Call log("clicked nexted 1")
 	Delay 10 * 1000
 	If autoSelectPlayer = True Then 
 		MoveTo baseX+150, baseY+205
@@ -260,10 +256,8 @@ Function runAutoMgr(Hwnd)
 		Delay 1000
 	End If
 	Call clickNext()// 阵容界面
-	Call log("clicked nexted 2")
 	Delay 5000
 	Call clickNext()// 选择球衣界面
-	Call log("clicked nexted 3")
 	Delay 10 * 1000
 	Call Plugin.Window.Active(Hwnd)
 	Delay 500
@@ -274,7 +268,6 @@ Function runAutoMgr(Hwnd)
 		Delay 3000
 		// check time, 15min
 		If (Plugin.Sys.GetTime() - startTime) > 12 * 60 * 1000 Then 
-			Call Plugin.Pic.PrintScreen(baseX+0, baseY+0, baseX+650, baseY+520, imgLocation & Replace(Plugin.Sys.GetDateTime(),":","`") & ".jpg")
 			Call log("Error: long time in one mgr")
 			runAutoMgr = False
 			Exit Function
@@ -282,13 +275,12 @@ Function runAutoMgr(Hwnd)
 		
 		FindColor baseX+585, baseY+460, baseX+630, baseY+500, "1E1E1E", intX, intY
 		If intX>0 And intY>0 Then
-			Call log("exit mgr mode")
+			Call log("exited mgr game")
 			Exit Do
 		End If
 		
 		//if in game, check if animation
 		If isInAnimation() = True Then 
-			Call Plugin.Pic.PrintScreen(baseX, baseY, baseX+650, baseY+520, imgLocation & Replace(Plugin.Sys.GetDateTime(),":","`") & ".jpg")
 			Call log("exit amnomation in mgr")
 			Call Plugin.Window.Active(Hwnd)
 			Delay 500
@@ -297,16 +289,14 @@ Function runAutoMgr(Hwnd)
 	Loop
 	Delay 5000
 	Call clickNext()
-	Call log("clicked nexted 4")
 	Delay 10*1000
 	
 	Call clickConfirmUpgrade()
 	Delay 2000
+	Call log("going to clicked poker")
 	Call clickNext()
-	Call log("clicked nexted poker")
 	Delay 5000
 	Call clickNext()
-	Call log("clicked nexted 6")
 	Delay 8 * 1000
 	Call clickRenew()
 	Delay 2 * 1000
@@ -322,19 +312,29 @@ Function runRankingMgr(Hwnd)
 	MoveTo baseX+519, baseY+407// choose mgr mod
 	Delay 500
 	LeftClick 1
-	Delay 30 * 1000
 	Call log(" choose mgr mod")
-	
-	For 10
-		If autoSelectPlayer = True Then 
-			MoveTo baseX+150, baseY+205 //click auto select people
-			Delay 500
-			LeftClick 1
-			Delay 1000
+
+	// using for to avoid timeout
+	For 30
+		Delay 2000
+		 // entered player select screen
+		FindColor baseX,100+baseY,120+baseX,200+baseY,"1C1E19",intX,intY
+		If intX>0 And intX<120 Then 
+			Delay 800
+			Call log("going to select plyer " & baseX & "-" & baseY)
+			Exit For
 		End If
-		Call clickNext()
-		Delay 10 * 1000
 	Next
+	Delay 2*1000
+	
+	If autoSelectPlayer = True Then 
+		MoveTo baseX+150, baseY+205 //click auto select people
+		Delay 500
+		LeftClick 1
+		Delay 1000
+	End If
+	Call clickNext()
+	Delay 20 * 1000// 包括等待对手，和选择球衣的时间
 	
 	Call log("start loop checking mgr")
 	// check if in prepare screen
@@ -348,11 +348,9 @@ Function runRankingMgr(Hwnd)
 			Exit Function
 		End If
 		
-		FindColor baseX+585, baseY+460, baseX+630, baseY+500, "1E1E1E", intX, intY
-		If intX>0 And intY>0 Then
-			Call log("exit mgr mode")
-			Beep 
-			Beep
+		FindColor baseX, baseY+110, baseX+62, baseY+200, "D17129", intX, intY
+		If intX>0 And intX<63 Then
+			Call log("exited mgr match")
 			Exit Do
 		End If
 		
@@ -366,16 +364,16 @@ Function runRankingMgr(Hwnd)
 		End If
 	Loop
 	Delay 5000
+	Call log("going to pass score screen ")
 	Call clickNext() // 评分
 	Delay 10*1000
 	
 	Call clickConfirmUpgrade() //
 	Delay 2000
+	Call log("going to clicked poker")
 	Call clickNext()// poker
-	Call log("clicked nexted poker")
 	Delay 5000
 	Call clickNext()// after poker
-	Call log("clicked nexted 6")
 	Delay 10*1000
 	Call clickRenew()
 	Call log("end runRankingMgr")
@@ -447,15 +445,15 @@ Function clickConfirmUpgrade()
 	IfColor baseX+333, baseY+414, "9D9795", 0 Then
 		MoveTo baseX+333, baseY+414
 		Delay 500
+		Call log("going to clicked upgrade")
 		LeftClick 1
-		Call log("clicked upgrade")
 	End If
 	
 	IfColor baseX+333,baseY+455,"9E9996",0 Then
 		MoveTo baseX+333, baseY+455
 		Delay 500
+		Call log("going to clicked upgrade")
 		LeftClick 1
-		Call log("clicked upgrade")
 	End If
 End Function
 
@@ -464,19 +462,17 @@ Function clickRenew()
 	// find if has renew button
 	FindColor baseX + 244, baseY + 139, baseX + 430, baseY + 496, "8C8684", renewX, renewY
 	FindColor baseX + 244, baseY + 139, baseX + 430, baseY + 496,"A4A1A4",renewX2,renewY2
-	Call log("Renew " & renewX & renewX2)
 	If renewX > 0 Or renewX2 > 0 Then 
 			Call log("need to renew")
 			MoveTo renewX, renewY
 			Delay 1000
+			Call log("going to clicked renew" & renewX & renewX2)
 			LeftClick 1
-			Call log("clicked renew")
-			
+	
 			Delay 2000
 			MoveTo baseX+318, baseY+305  // click confirm button
 			Delay 500
 			LeftClick 1
-	Call log("exit click renew")
 	End If		
 		
 End Function
@@ -489,11 +485,12 @@ Function exitGame(Hwnd)
 	Delay 1500
 	MoveTo baseX+294, baseY+301
 	LeftClick 1
-	Delay 500
-	//Call Plugin.File.DeleteFolder("D:temp")
 	Call log("exited game")
 End Function
 
 Function log(info)
+	If isDebug = True Then 
+		Call Plugin.Pic.PrintScreen(baseX, baseY, baseX+650, baseY+520, imgLocation & Replace(Plugin.Sys.GetDateTime(),":","`") & ".jpg")
+	End If
 	Call Plugin.File.WriteFileEx(logLocation, Plugin.Sys.GetDateTime() & "   " & info)
 End Function
